@@ -9,5 +9,5 @@ import KeyboardShortcuts
 import AppKit
 
 extension KeyboardShortcuts.Name {
-    static let toggleClipFlow = Self("toggleClipFlow", initial: .init(.v, modifiers: [.command, .shift]))
+    static let toggleClipFlow = Self("toggleClipFlow", default: .init(.v, modifiers: [.command, .shift]))
 }
