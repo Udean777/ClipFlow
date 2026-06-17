@@ -1,6 +1,6 @@
 # <img src="Assets/logo.png" width="48" align="center" alt="ClipFlow Logo" /> ClipFlow
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/ssajudn/ClipFlow/build.yml?branch=main)](https://github.com/ssajudn/ClipFlow/actions/workflows/build.yml)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/Udean777/ClipFlow/build.yml?branch=main)](https://github.com/Udean777/ClipFlow/actions/workflows/build.yml)
 [![Platform](https://img.shields.io/badge/platform-macOS-blue.svg)](https://developer.apple.com/macos/)
 [![Swift Version](https://img.shields.io/badge/swift-6.3-orange.svg)](https://swift.org)
 [![SwiftUI](https://img.shields.io/badge/UI-SwiftUI-red.svg)](https://developer.apple.com/xcode/swiftui/)
@@ -33,7 +33,7 @@
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/ssajudn/ClipFlow.git
+   git clone https://github.com/Udean777/ClipFlow.git
    cd ClipFlow
    ```
 2. Open in Xcode:
