@@ -11,6 +11,9 @@ jobs:
     name: Build & Package
     runs-on: macos-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -36,3 +39,15 @@ jobs:
           name: ClipFlow-DMG
           path: build/ClipFlow.dmg
           if-no-files-found: error
+
+      - name: Create GitHub Release
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Release v1.0.${{ github.run_number }}
+          draft: false
+          prerelease: false
+          files: build/ClipFlow.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
