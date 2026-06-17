@@ -1,0 +1,54 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must be ignored if generated dynamically
+# Icon?
+
+# Files that might be created by a folder preview
+._*
+
+# Files that may be created by Finder
+.DocumentRevisions-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Xcode
+#
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcworkspace/
+!default.xcworkspace/
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+# Swift Package Manager
+.build/
+Packages/
+Package.pins
+Package.resolved
+.swiftpm/
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# CI/CD / Build tools
+*.dmg
+*.zip
+*.app

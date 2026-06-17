@@ -1,0 +1,38 @@
+name: Build macOS DMG
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    name: Build & Package
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode Version
+        run: |
+          # Use the latest stable Xcode available on the runner
+          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          xcodebuild -version
+
+      - name: Build macOS App
+        run: |
+          xcodebuild -scheme ClipFlow -configuration Debug -derivedDataPath build/DerivedData CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+
+      - name: Package DMG
+        run: |
+          chmod +x package_dmg.sh
+          ./package_dmg.sh
+
+      - name: Upload DMG Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ClipFlow-DMG
+          path: build/ClipFlow.dmg
+          if-no-files-found: error
