@@ -36,28 +36,45 @@ final class ClipboardViewModel {
                 FloatingWindowManager.shared.toggle(viewModel: self)
             }
         }
+        
+        clearOldItems()
     }
     
     func setup(modelContext: ModelContext) {
         self.modelContext = modelContext
     }
     
+    func clearOldItems() {
+        guard let context = modelContext else { return }
+        
+        let cutoff = Calendar.current.date(byAdding: .hour, value: -24, to: Date())!
+        let all = (try? context.fetch(FetchDescriptor<ClipItem>())) ?? []
+        let toDelete = all.filter { $0.timestamp < cutoff && !$0.isPinned }
+        
+        for item in toDelete {
+            context.delete(item)
+        }
+        if !toDelete.isEmpty {
+            try? context.save()
+            Log("🧹 Auto-cleared \(toDelete.count) items older than 24h")
+        }
+    }
+    
     func clearAll() {
         guard let context = modelContext else { return }
         
-        
         pasteboardService.pauseMonitoring()
-        
         
         let descriptor = FetchDescriptor<ClipItem>()
         if let items = try? context.fetch(descriptor) {
-            for item in items {
+            for item in items where !item.isPinned {
                 context.delete(item)
             }
         }
         try? context.save()
         
-        Log("🗑️ All items cleared")
+        let remaining = (try? context.fetch(FetchDescriptor<ClipItem>()))?.count ?? 0
+        Log("🗑️ Cleared unpinned items, \(remaining) pinned remaining")
         
         
         
@@ -106,15 +123,19 @@ final class ClipboardViewModel {
                 context.insert(item)
             }
         } else {
-            Log("📋 handleNewCopy: inserting item type=\(item.typeRawValue)")
+            Log("📋 handleNewCopy: inserting item type=\(item.typeRawValue ?? "nil")")
             context.insert(item)
         }
         
         
         let allDescriptor = FetchDescriptor<ClipItem>(sortBy: [SortDescriptor(\.timestamp, order: .reverse)])
-        if let allItems = try? context.fetch(allDescriptor), allItems.count > 100 {
-            for oldItem in allItems.dropFirst(100) {
-                context.delete(oldItem)
+        if let allItems = try? context.fetch(allDescriptor) {
+            let unpinned = allItems.filter { !$0.isPinned }
+            if unpinned.count > 100 {
+                for oldItem in unpinned.dropFirst(100) {
+                    context.delete(oldItem)
+                }
+                Log("📋 Trimmed \(unpinned.count - 100) oldest unpinned items")
             }
         }
         

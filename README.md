@@ -18,6 +18,8 @@
 - **⚡ Lightweight & Fast**: Built natively with Swift and SwiftUI for the ultimate performance and negligible resource footprint.
 - **🗄️ Local Persistence**: Leverages Apple's new **SwiftData** framework to secure and persist your clipboard history safely on your device.
 - **🌐 Menubar Quick Access**: Always accessible via a beautiful customized menu bar popover window, designed with premium native macOS styling.
+- **🎛️ Dual-Mode Interface**: Seamless switching between **Clipboard History** (transient data) and **Snippet Manager** (saved text templates) in the new dedicated main window.
+- **🧹 Auto-Clearing Lifecycle**: Automatic background purging of unpinned items older than 24 hours to keep the database light and performant.
 - **⌨️ Keyboard Shortcuts**: Built-in system-wide keyboard hotkey bindings to quickly summon your clips instantly.
 
 ---

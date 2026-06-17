@@ -19,6 +19,7 @@ final class ClipItem {
     var timestamp: Date
     var typeRawValue: String?
     @Attribute(.externalStorage) var imageData: Data?
+    var isPinned: Bool = false
     
     var type: ClipType {
         if let raw = typeRawValue, let clipType = ClipType(rawValue: raw) {
