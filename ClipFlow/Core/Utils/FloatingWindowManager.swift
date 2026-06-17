@@ -1,3 +1,4 @@
+
 //
 //  FloatingWindowManager.swift
 //  ClipFlow
@@ -9,6 +10,7 @@ import AppKit
 import SwiftUI
 import SwiftData
 
+@MainActor
 final class FloatingWindowManager {
     static let shared = FloatingWindowManager()
     private var panel: NSPanel?
@@ -16,7 +18,6 @@ final class FloatingWindowManager {
     
     private init() {}
     
-    @MainActor
     func toggle(viewModel: ClipboardViewModel) {
         if let panel = panel, panel.isVisible {
             panel.orderOut(nil)
@@ -25,7 +26,6 @@ final class FloatingWindowManager {
         }
     }
     
-    @MainActor
     private func show(viewModel: ClipboardViewModel) {
         previousApp = NSWorkspace.shared.frontmostApplication
         
@@ -53,7 +53,7 @@ final class FloatingWindowManager {
         }
         
         panel?.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
+        NSApp.activate()
     }
     
     func close() {
@@ -64,7 +64,7 @@ final class FloatingWindowManager {
         panel?.orderOut(nil)
         
         if let app = previousApp {
-            app.activate(options: .activateIgnoringOtherApps)
+            app.activate()
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
