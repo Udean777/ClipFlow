@@ -45,10 +45,10 @@ final class ClipboardViewModel {
     func clearAll() {
         guard let context = modelContext else { return }
         
-        // 1. Pause monitoring
+        
         pasteboardService.pauseMonitoring()
         
-        // 2. Fetch semua item lalu delete satu-satu
+        
         let descriptor = FetchDescriptor<ClipItem>()
         if let items = try? context.fetch(descriptor) {
             for item in items {
@@ -59,8 +59,8 @@ final class ClipboardViewModel {
         
         Log("🗑️ All items cleared")
         
-        // 3. Resume setelah 2 detik — clipboard tidak di-clear,
-        //    tapi lastChangeCount di-reset agar item lama tidak re-add
+        
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
             self?.pasteboardService.resumeMonitoring()
         }
@@ -110,7 +110,7 @@ final class ClipboardViewModel {
             context.insert(item)
         }
         
-        // Trim max 100 items
+        
         let allDescriptor = FetchDescriptor<ClipItem>(sortBy: [SortDescriptor(\.timestamp, order: .reverse)])
         if let allItems = try? context.fetch(allDescriptor), allItems.count > 100 {
             for oldItem in allItems.dropFirst(100) {

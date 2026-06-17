@@ -29,7 +29,7 @@ final class ScreenshotCapture {
         
         var seenFiles: Set<String> = []
         
-        // Initial snapshot of existing files
+        
         if let files = try? FileManager.default.contentsOfDirectory(atPath: desktopURL.path) {
             for f in files where f.lowercased().hasPrefix("screenshot") && f.lowercased().hasSuffix(".png") {
                 seenFiles.insert(f)
@@ -77,13 +77,13 @@ final class ScreenshotCapture {
                 continue
             }
             
-            // Skip already seen files
+            
             guard !seenFiles.contains(file) else { continue }
             seenFiles.insert(file)
             
             let filePath = (desktopPath as NSString).appendingPathComponent(file)
             
-            // Wait briefly for macOS to finish writing
+            
             Thread.sleep(forTimeInterval: 0.2)
             
             guard let imageData = try? Data(contentsOf: URL(fileURLWithPath: filePath)) else {

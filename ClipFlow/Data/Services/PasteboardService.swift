@@ -29,6 +29,16 @@ final class PasteboardService: PasteboardServiceType {
         screenshotCapture.onScreenshot = { [weak self] imageData in
             guard let self = self else { return }
             Log("📸 Screenshot captured: \(imageData.count) bytes")
+            
+            // Tulis ke clipboard supaya langsung bisa Cmd+V
+            pasteboard.clearContents()
+            pasteboard.setData(imageData, forType: .png)
+            if let nsImage = NSImage(data: imageData), let tiff = nsImage.tiffRepresentation {
+                pasteboard.setData(tiff, forType: .tiff)
+            }
+            lastChangeCount = pasteboard.changeCount
+            Log("📸 Written to clipboard, changeCount=\(lastChangeCount)")
+            
             let item = ClipItem(content: "[Screenshot]", type: .image, imageData: imageData)
             Task { @MainActor in
                 Log("📸 Inserting screenshot into DB via onNewCopy...")
@@ -37,7 +47,7 @@ final class PasteboardService: PasteboardServiceType {
         }
         screenshotCapture.start()
         
-        // Mulai polling loop
+        
         pollClipboard()
         
         Log("🚀 Monitoring started!")
@@ -57,23 +67,23 @@ final class PasteboardService: PasteboardServiceType {
         justResumed = true
         isPaused = false
         
-        // Skip check pertama — biarkan user copy dulu
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
             self?.justResumed = false
         }
         Log("🔄 Monitoring resumed")
     }
     
-    // MARK: - Polling loop
+    
     
     private func pollClipboard() {
         guard isMonitoring else { return }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             guard let self = self else { return }
-            // Cek paused DISINI — sebelum checkForChanges
+            
             guard !self.isPaused else {
-                self.pollClipboard() // skip check, tetap jadwalkan next poll
+                self.pollClipboard() 
                 return
             }
             self.checkForChanges()
@@ -105,7 +115,7 @@ final class PasteboardService: PasteboardServiceType {
         let currentText = pasteboard.string(forType: .string)
         Log("📋 Clipboard text: \"\(currentText?.prefix(80) ?? "nil")\"")
         
-        // 1. PNG
+        
         if let pngData = pasteboard.data(forType: .png) {
             Log("✅ PNG found, \(pngData.count) bytes")
             let item = ClipItem(content: "[Gambar Disolin]", type: .image, imageData: pngData)
@@ -113,7 +123,7 @@ final class PasteboardService: PasteboardServiceType {
             return
         }
         
-        // 2. TIFF
+        
         if let tiffData = pasteboard.data(forType: .tiff) {
             Log("✅ TIFF found, \(tiffData.count) bytes")
             let item = ClipItem(content: "[Gambar Disolin]", type: .image, imageData: tiffData)
@@ -121,7 +131,7 @@ final class PasteboardService: PasteboardServiceType {
             return
         }
         
-        // 3. NSImage
+        
         if let nsImage = NSImage(pasteboard: pasteboard),
            let tiff = nsImage.tiffRepresentation,
            let bitmap = NSBitmapImageRep(data: tiff),
@@ -132,7 +142,7 @@ final class PasteboardService: PasteboardServiceType {
             return
         }
         
-        // 4. Teks
+        
         if let text = currentText {
             guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
                 Log("⏭️ Empty text — skipping")

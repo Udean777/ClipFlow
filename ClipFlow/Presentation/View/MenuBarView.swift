@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 import Combine
 
-// MARK: - 1. Tipe Data Filter
+
 enum DateFilter: String, CaseIterable, Identifiable {
     case semua = "Semua"
     case hariIni = "Hari Ini"
@@ -31,7 +31,7 @@ enum DateFilter: String, CaseIterable, Identifiable {
     }
 }
 
-// MARK: - 2. Tampilan Utama MenuBar
+
 struct MenuBarView: View {
     var viewModel: ClipboardViewModel
     
@@ -82,15 +82,15 @@ struct MenuBarView: View {
                 pasteboard.clearContents()
                 
                 if item.type == .image, let data = item.imageData {
-                    // Tulis PNG — dibaca semua app modern (Chrome, WA, Notes, Figma, dll)
+                    
                     pasteboard.setData(data, forType: .png)
                     
-                    // Tulis TIFF — fallback untuk app macOS jadul
+                    
                     if let nsImage = NSImage(data: data), let tiff = nsImage.tiffRepresentation {
                         pasteboard.setData(tiff, forType: .tiff)
                     }
                     
-                    // Tulis public.tiff — format universal yang dibaca hampir semua app
+                    
                     if let publicTiff = pasteboard.data(forType: .tiff) {
                         pasteboard.setData(publicTiff, forType: NSPasteboard.PasteboardType("public.tiff"))
                     }
@@ -107,7 +107,7 @@ struct MenuBarView: View {
     }
 }
 
-// MARK: - 4. Child View List (Manual Fetch, no @Query)
+
 struct FilteredClipList: View {
     @Environment(\.modelContext) private var modelContext
     let filter: DateFilter
@@ -216,7 +216,7 @@ struct FilteredClipList: View {
     }
 }
 
-// MARK: - 5. Custom Component Interaktif Baris
+
 struct ClipItemRow: View {
     let item: ClipItem
     var isKeyboardSelected: Bool = false
