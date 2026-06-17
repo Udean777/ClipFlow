@@ -104,6 +104,13 @@ final class PasteboardService: PasteboardServiceType {
             return
         }
         
+        if let frontApp = NSWorkspace.shared.frontmostApplication,
+           let bundleID = frontApp.bundleIdentifier,
+           IgnoredAppsManager.isIgnored(bundleID) {
+            Log("⏭️ Ignored app: \(bundleID) (\(frontApp.localizedName ?? ""))")
+            return
+        }
+        
         let isFileURL = pasteboard.types?.contains(.fileURL) ?? false
         if isFileURL {
             Log("⚠️ FileURL — skipping")
