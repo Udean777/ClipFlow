@@ -3,8 +3,18 @@ name: Build macOS DMG
 on:
   push:
     branches: [ main, master ]
+    paths:
+      - 'ClipFlow/**'
+      - 'ClipFlow.xcodeproj/**'
+      - 'package_dmg.sh'
+      - '.github/workflows/build.yml'
   pull_request:
     branches: [ main, master ]
+    paths:
+      - 'ClipFlow/**'
+      - 'ClipFlow.xcodeproj/**'
+      - 'package_dmg.sh'
+      - '.github/workflows/build.yml'
 
 jobs:
   build:
